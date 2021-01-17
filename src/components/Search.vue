@@ -16,22 +16,22 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
+      required: true,
     },
     placeholder: {
       type: String,
-      default: 'Search'
-    }
+      default: 'Search',
+    },
   },
-  data () {
-    return { search: this.value }
+  data() {
+    return { search: this.value };
   },
   watch: {
-    search (val) {
+    search(val) {
       this.$emit('search', val);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -66,5 +66,3 @@ input {
 }
 
 </style>
-
-
