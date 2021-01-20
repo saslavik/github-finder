@@ -11,6 +11,15 @@
           @search='search = $event'/>
           <button class="btn btnPrimary" @click="getRepos" v-if="!repos">Search!</button>
           <button class="btn btnPrimary" @click="getRepos" v-if="repos">Search Again!</button>
+          <div class="user__wrapper" v-if="user">
+            <div class="user-info">
+              <img :src="user.avatar_url" :alt="user.login">
+              <div>
+                <span>{{ user.name || user.login }}</span>
+                <p>Count of repos: {{ repos.length }} </p>
+              </div>
+            </div>
+          </div>
           <div class="repos__wrapper" v-if="repos">
             <!-- repo item -->
             <div class="repo-item" v-for="repo in repos" :key="repo.id">
@@ -37,20 +46,25 @@ export default {
     return {
       search: '',
       err: null,
+      user: null,
       repos: null,
     };
   },
   methods: {
     getRepos() {
       // console.log(`get user ${this.search} repos`);
-      axios
-        .get(`https://api.github.com/users/${this.search}/repos`)
-        .then((res) => {
+      axios.all([
+        axios.get(`https://api.github.com/users/${this.search}`),
+        axios.get(`https://api.github.com/users/${this.search}/repos`),
+      ])
+        .then(axios.spread((res1, res2) => {
           this.err = false;
-          this.repos = res.data;
-        })
+          this.user = res1.data;
+          this.repos = res2.data;
+        }))
         .catch(() => {
           this.repos = null;
+          this.user = null;
           this.err = "Can't find this user";
         });
     },
@@ -69,6 +83,18 @@ export default {
 }
 button {
   margin-top: 36px;
+}
+
+.user__wrapper {
+  margin: 20px 0;
+  width: 400px;
+  .user-info {
+    display: flex;
+  }
+  img {
+    width: 80px;
+    margin-right: 20px;
+  }
 }
 
 .repos__wrapper {
