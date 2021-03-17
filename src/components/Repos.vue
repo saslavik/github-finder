@@ -29,10 +29,6 @@
 <script>
 export default {
   props: {
-    user: {
-      type: Object,
-      required: true,
-    },
     repos: {
       type: Array,
       required: true,

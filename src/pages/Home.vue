@@ -44,12 +44,12 @@ export default {
   },
   methods: {
     getRepos() {
-      // console.log(`get user ${this.search} repos`);
       axios.all([
         axios.get(`https://api.github.com/users/${this.search}`),
         axios.get(`https://api.github.com/users/${this.search}/repos`),
       ])
         .then(axios.spread((res1, res2) => {
+          console.log(res1, res2);
           this.err = false;
           this.user = res1.data;
           this.repos = res2.data;
